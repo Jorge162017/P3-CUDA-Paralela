@@ -1,0 +1,8 @@
+# Plan personal: no incluir en Git
+/PLAN_FASES_LOCAL.md
+
+# Archivos locales y compilados
+.DS_Store
+.vscode/
+/build/
+*.o
