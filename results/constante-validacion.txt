@@ -1,0 +1,121 @@
+Mon Nov  2 03:47:20 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.82.07              Driver Version: 580.82.07      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |
+| N/A   47C    P8              9W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2025 NVIDIA Corporation
+Built on Wed_Aug_20_01:58:59_PM_PDT_2025
+Cuda compilation tools, release 13.0, V13.0.88
+Build cuda_13.0.r13.0/compiler.36424714_0
+== original: ./build/hough data/runway.pgm
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Bloques: 1875; hilos por bloque: 256
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+== original: ./build/hough_const data/runway.pgm
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Variante: memoria global + constante
+Bloques: 1875; hilos por bloque: 256
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+== parcial: ./build/hough_const /tmp/tmpo9bt_59m/parcial.pgm
+Imagen: 7 x 3; acumulador: 9000 bins
+GPU: Tesla T4
+Variante: memoria global + constante
+Bloques: 1; hilos por bloque: 256
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+== negra: ./build/hough_const /tmp/tmpo9bt_59m/negra.pgm
+Imagen: 7 x 3; acumulador: 9000 bins
+GPU: Tesla T4
+Variante: memoria global + constante
+Bloques: 1; hilos por bloque: 256
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+== entrada invalida: ./build/hough_const
+Uso: ./build/hough_const imagen.pgm
+== entrada invalida: ./build/hough_const archivo-inexistente.pgm
+Error: No se pudo abrir la imagen PGM
+== recursos del kernel: cuobjdump -res-usage build/hough
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z13GPU_HoughTranPKhiiPiffPKfS3_:
+  REG:16 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:400 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_75
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =  --fmad false 
+== recursos del kernel: cuobjdump -res-usage build/hough_const
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0 CONSTANT[3]:720
+ Function _Z18GPU_HoughTranConstPKhiiPiff:
+  REG:16 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_75
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =  --fmad false 
+RESULTADO: todas las pruebas pasaron
