@@ -61,7 +61,20 @@ nvcc -I. -O2 -std=c++17 --fmad=false src/houghConst.cu build/pgm.o -o build/houg
 - La ruta CPU de `houghConst.cu` compila con Clang (`-DHOUGH_CPU_ONLY`) y procesa `data/runway.pgm`: 138406 píxeles activos y 12456540 votos, igual que la versión global.
 - El código CUDA (kernel y host) pasa una revisión de sintaxis con Clang en modo CUDA para `sm_75`. Esto **no** sustituye compilar con `nvcc` ni ejecutar en GPU.
 
-**En GPU:** pendiente de ejecutar el notebook en Colab. El resultado real se registrará en `results/constante-validacion.txt`; no se da por válida la variante antes de esa ejecución.
+**En GPU (Colab, Tesla T4, driver 580.82.07, CUDA 13.0 / nvcc V13.0.88):** todas las pruebas pasaron. La salida completa está en [results/constante-validacion.txt](../results/constante-validacion.txt). Se ejecutó el commit `94d5c0e`, clonado de la rama en lugar de subir el ZIP; las celdas de compilación y validación se corrieron sin cambios.
+
+- Imagen original de 800 × 600, 1875 bloques de 256 hilos: la versión global y la constante coinciden con la CPU en todos los bins. Como ambas se comparan contra la misma referencia, también coinciden entre sí.
+- Imagen de 7 × 3 con 21 píxeles activos (bloque parcial) e imagen negra: sin diferencias CPU/GPU.
+- Sin argumentos y con archivo inexistente: la variante constante devuelve error, como se esperaba.
+
+`cuobjdump -res-usage` confirma que las tablas viven en memoria constante:
+
+| Kernel | Memoria constante del módulo | Parámetros del kernel (`CONSTANT[0]`) |
+| --- | --- | --- |
+| `GPU_HoughTran` (global) | ninguna | 400 bytes |
+| `GPU_HoughTranConst` | `CONSTANT[3]: 720` bytes, exactamente `d_Cos` + `d_Sin` | 384 bytes |
+
+Los 16 bytes menos en los parámetros corresponden a los dos punteros a tablas que el kernel ya no recibe. Ambos kernels usan 16 registros, sin memoria compartida ni local.
 
 ## Hipótesis sobre el tiempo (por medir en la fase 4)
 
