@@ -10,7 +10,9 @@ Proyecto de Computación Paralela y Distribuida para detectar líneas rectas en 
 
 La fase 1 está implementada: lector PGM P2/P5 de 8 bits, kernel con memoria global, validación de argumentos y errores CUDA, comparación exacta CPU/GPU y liberación de recursos. La referencia CPU utiliza las mismas tablas trigonométricas que la GPU. Se desactiva la fusión de operaciones flotantes en la compilación para mantener una comparación reproducible.
 
-**Pendiente:** ejecutar la validación GPU en Colab y guardar la evidencia. La medición con CUDA Events y las imágenes de salida pertenecen a la fase 2; las memorias constante y compartida siguen pendientes.
+**Validado en Colab:** Tesla T4 con CUDA Toolkit 13.0. CPU y GPU coinciden para la imagen original, una imagen de bloque parcial y una imagen negra. Ver [evidencia de la fase 1](results/fase1-colab.txt). También se comprobó el rechazo de argumentos ausentes y archivos inexistentes.
+
+**Pendiente:** medición con CUDA Events e imágenes de salida (fase 2), memoria constante y memoria compartida.
 
 ## Estructura
 

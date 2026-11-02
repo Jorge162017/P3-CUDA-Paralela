@@ -21,9 +21,16 @@ CPU OK: 138406 pixeles activos, 12456540 votos. GPU NO ejecutada.
 
 También se comprobó lectura P2 con comentarios, P5 con píxeles cuyos bytes son espacios o saltos de línea, imagen negra y rechazo de datos truncados, valores fuera de rango, dimensiones inválidas, argumentos ausentes y archivo inexistente. Se verificó el JSON del notebook y el contenido del ZIP.
 
-## Pendiente para cerrar la fase
+## Validación GPU completada
 
-Ejecutar `notebooks/fase1_colab.ipynb` con GPU y guardar la evidencia descargada en `results/fase1-colab.txt`. La prueba CPU local no demuestra que el kernel CUDA compile o funcione. El notebook verifica la imagen original, una imagen de 21 píxeles (bloque parcial), una imagen negra y entradas inválidas.
+La evidencia real está en [results/fase1-colab.txt](../results/fase1-colab.txt): Google Colab con Tesla T4, driver 580.82.07 y CUDA Toolkit 13.0 (nvcc V13.0.88).
+
+- Imagen original de 800 × 600: 1875 bloques de 256 hilos; todos los bins coinciden entre CPU y GPU.
+- Imagen de 7 × 3 con píxeles activos: bloque parcial validado, sin diferencias CPU/GPU.
+- Imagen negra de 7 × 3: todos los bins coinciden.
+- Argumentos ausentes y archivo inexistente: errores esperados registrados.
+
+La primera ejecución completó las pruebas, pero falló al guardar el log porque faltaba la carpeta `results/`. Se corrigió el notebook para crearla y se conservó la evidencia de la sesión. Con estas comprobaciones se cierra la fase 1.
 
 La fase 2 agregará CUDA Events, bitácora de diez mediciones e imagen con líneas a color.
 
