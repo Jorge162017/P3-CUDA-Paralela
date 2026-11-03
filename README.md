@@ -14,7 +14,9 @@ La fase 1 está implementada: lector PGM P2/P5 de 8 bits, kernel con memoria glo
 
 **Avances de compañeros integrados:** [global + constante](docs/memoria-constante.md) y [global + compartida](docs/memoria-compartida.md), ambas con evidencia de validación GPU en `results/`. La compartida aún usa tablas globales.
 
-**Pendiente:** CUDA Events (al menos 10 mediciones por versión), imagen con líneas a color, combinar constante + compartida, comparación de tiempos e informe/presentación. Ver [revisión completa](docs/PENDIENTES.md).
+**Fase 2 global implementada, pendiente de validación en Colab:** [notebook de diez mediciones e imagen](notebooks/fase2_global_colab.ipynb) y [detalle del método](docs/FASE2.md). CUDA Events mide solo el kernel y el PNG se genera desde el acumulador exportado.
+
+**Pendiente del equipo:** registrar tiempos reales en las tres versiones, combinar constante + compartida, comparación de tiempos e informe/presentación. Ver [revisión completa](docs/PENDIENTES.md).
 
 ## Estructura
 
@@ -84,3 +86,14 @@ Consultar los requisitos completos en [el enunciado](docs/Proyecto%203%20-%20CUD
 ## Colaboración
 
 Subir avances en commits pequeños, separados y con mensajes claros. Cada integrante debe registrar sus propias contribuciones: no acumular todo el proyecto en uno o dos commits. Actualizar este README cuando cambien los comandos o se complete una funcionalidad.
+
+## Medir la variante global y dibujar las líneas
+
+```sh
+make build/hough
+./build/hough data/runway.pgm --runs 10 --output results/fase2-global
+python3 -m pip install -r requirements.txt
+python3 scripts/render_lines.py --image data/runway.pgm --accumulator results/fase2-global/global-accumulator.json --output results/fase2-global/global-lines.png
+```
+
+En Colab, [fase2_global_colab.ipynb](notebooks/fase2_global_colab.ipynb) clona `main`, compila, ejecuta diez mediciones en una celda, muestra sus resultados y luego genera la imagen en otra celda. No requiere subir un ZIP del código. El ZIP descargado contiene la evidencia que se incorporará al repositorio después de ejecutar.
