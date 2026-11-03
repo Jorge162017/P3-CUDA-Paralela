@@ -1,0 +1,11 @@
+variant,run,kernel_ms,gpu,cuda_runtime,cuda_driver,width,height,blocks,threads,warmup_runs,validated
+constante,91,0.849824,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,92,0.841728,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,93,0.851136,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,94,0.849568,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,95,0.847808,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,96,0.855040,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,97,0.852416,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,98,0.844448,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,99,0.856704,"Tesla T4",13000,13000,800,600,1875,256,1,true
+constante,100,0.849920,"Tesla T4",13000,13000,800,600,1875,256,1,true

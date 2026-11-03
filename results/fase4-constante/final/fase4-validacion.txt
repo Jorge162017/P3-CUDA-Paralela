@@ -1,0 +1,90 @@
+Tue Nov  3 01:50:52 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.82.07              Driver Version: 580.82.07      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |
+| N/A   39C    P8             13W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2025 NVIDIA Corporation
+Built on Wed_Aug_20_01:58:59_PM_PDT_2025
+Cuda compilation tools, release 13.0, V13.0.88
+Build cuda_13.0.r13.0/compiler.36424714_0
+Rama: feat/tiempos-constante
+Commit: e8149778f6c67cae4f2357cfde35420a5ee00716
+Compilacion: make build/hough build/hough_const; -O2 -std=c++17 --fmad=false
+Protocolo: 2000 ejecuciones descartadas para estabilizar la GPU; luego 4 rondas ABBA, cada ejecucion con 1 calentamiento + 100 mediciones; se reportan las ultimas 10
+== estabilizacion (descartada): codigo 0; Promedio del kernel (2000 ejecuciones): 0.926927 ms
+== ronda1 global | GPU antes: P0, 1590, 5000, 43, 38.54 | despues: P0, 1590, 5000, 43, 37.67
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Bloques: 1875; hilos por bloque: 256; calentamientos: 1
+Promedio del kernel (100 ejecuciones): 0.865322 ms
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+Promedios por tramo (ms): 1-10: 0.864560; 11-90: 0.864690; 91-100: 0.871142
+== ronda1 constante | GPU antes: P0, 1590, 5000, 43, 37.67 | despues: P0, 1590, 5000, 43, 41.58
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Variante: memoria global + constante
+Bloques: 1875; hilos por bloque: 256; calentamientos: 1
+Promedio del kernel (100 ejecuciones): 0.851436 ms
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+Promedios por tramo (ms): 1-10: 0.848102; 11-90: 0.851764; 91-100: 0.852144
+== ronda2 constante | GPU antes: P0, 1590, 5000, 43, 34.63 | despues: P0, 1590, 5000, 43, 35.62
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Variante: memoria global + constante
+Bloques: 1875; hilos por bloque: 256; calentamientos: 1
+Promedio del kernel (100 ejecuciones): 0.852977 ms
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+Promedios por tramo (ms): 1-10: 0.852026; 11-90: 0.853485; 91-100: 0.849859
+== ronda2 global | GPU antes: P0, 1590, 5000, 43, 35.62 | despues: P0, 1590, 5000, 43, 37.48
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Bloques: 1875; hilos por bloque: 256; calentamientos: 1
+Promedio del kernel (100 ejecuciones): 0.863498 ms
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+Promedios por tramo (ms): 1-10: 0.861744; 11-90: 0.863800; 91-100: 0.862829
+== ronda3 global | GPU antes: P0, 1590, 5000, 43, 37.48 | despues: P0, 1590, 5000, 43, 39.82
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Bloques: 1875; hilos por bloque: 256; calentamientos: 1
+Promedio del kernel (100 ejecuciones): 0.865785 ms
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+Promedios por tramo (ms): 1-10: 0.870403; 11-90: 0.865895; 91-100: 0.860285
+== ronda3 constante | GPU antes: P0, 1590, 5000, 43, 35.33 | despues: P0, 1590, 5000, 44, 35.23
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Variante: memoria global + constante
+Bloques: 1875; hilos por bloque: 256; calentamientos: 1
+Promedio del kernel (100 ejecuciones): 0.848210 ms
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+Promedios por tramo (ms): 1-10: 0.847210; 11-90: 0.848193; 91-100: 0.849344
+== ronda4 constante | GPU antes: P0, 1590, 5000, 43, 35.23 | despues: P0, 1590, 5000, 44, 36.12
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Variante: memoria global + constante
+Bloques: 1875; hilos por bloque: 256; calentamientos: 1
+Promedio del kernel (100 ejecuciones): 0.847053 ms
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+Promedios por tramo (ms): 1-10: 0.848010; 11-90: 0.846234; 91-100: 0.852650
+== ronda4 global | GPU antes: P0, 1590, 5000, 44, 36.12 | despues: P0, 1590, 5000, 44, 38.74
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Bloques: 1875; hilos por bloque: 256; calentamientos: 1
+Promedio del kernel (100 ejecuciones): 0.867444 ms
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+Promedios por tramo (ms): 1-10: 0.863152; 11-90: 0.867688; 91-100: 0.869782
