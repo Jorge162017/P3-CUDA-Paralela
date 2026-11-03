@@ -1,0 +1,75 @@
+Variante: global + compartida; tablas trigonometricas aun en memoria GLOBAL (sin memoria constante).
+Commit: fa1e80ec3f17b3a9f80e00a6329d4fb6292f8dd0
+Compilacion: nvcc -I. -O2 -std=c++17 --fmad=false src/houghShared.cu common/pgm.cpp -o build/hough_shared
+
+Mon Nov  2 05:27:26 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.82.07              Driver Version: 580.82.07      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |
+| N/A   40C    P8             14W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2025 NVIDIA Corporation
+Built on Wed_Aug_20_01:58:59_PM_PDT_2025
+Cuda compilation tools, release 13.0, V13.0.88
+Build cuda_13.0.r13.0/compiler.36424714_0
+
+runway.pgm (original) (codigo de salida 0)
+Variante: global + compartida (tablas aun en memoria global)
+Imagen: 800 x 600; acumulador: 9000 bins
+GPU: Tesla T4
+Memoria compartida por bloque: requerida 36000 bytes, limite GPU 49152 bytes
+Bloques: 1875; hilos por bloque: 256; pixeles en ultimo bloque: 256
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+
+21 pixeles blancos (7x3, 1 bloque parcial) (codigo de salida 0)
+Variante: global + compartida (tablas aun en memoria global)
+Imagen: 7 x 3; acumulador: 9000 bins
+GPU: Tesla T4
+Memoria compartida por bloque: requerida 36000 bytes, limite GPU 49152 bytes
+Bloques: 1; hilos por bloque: 256; pixeles en ultimo bloque: 21
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+
+21 pixeles negros (7x3) (codigo de salida 0)
+Variante: global + compartida (tablas aun en memoria global)
+Imagen: 7 x 3; acumulador: 9000 bins
+GPU: Tesla T4
+Memoria compartida por bloque: requerida 36000 bytes, limite GPU 49152 bytes
+Bloques: 1; hilos por bloque: 256; pixeles en ultimo bloque: 21
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+
+300 pixeles blancos (20x15, 2 bloques, ultimo parcial) (codigo de salida 0)
+Variante: global + compartida (tablas aun en memoria global)
+Imagen: 20 x 15; acumulador: 9000 bins
+GPU: Tesla T4
+Memoria compartida por bloque: requerida 36000 bytes, limite GPU 49152 bytes
+Bloques: 2; hilos por bloque: 256; pixeles en ultimo bloque: 44
+VALIDACION OK: CPU y GPU coinciden en todos los bins.
+
+argumentos invalidos [] (codigo 1) ===
+Uso: ./build/hough_shared imagen.pgm
+
+argumentos invalidos ['archivo-inexistente.pgm'] (codigo 1) ===
+Error: No se pudo abrir la imagen PGM
+
+ Resumen
+runway.pgm (original): 0
+21 pixeles blancos (7x3, 1 bloque parcial): 0
+21 pixeles negros (7x3): 0
+300 pixeles blancos (20x15, 2 bloques, ultimo parcial): 0
+invalido []: 0
+invalido ['archivo-inexistente.pgm']: 0
