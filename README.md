@@ -14,9 +14,9 @@ La fase 1 está implementada: lector PGM P2/P5 de 8 bits, kernel con memoria glo
 
 **Avances de compañeros integrados:** [global + constante](docs/memoria-constante.md) y [global + compartida](docs/memoria-compartida.md), ambas con evidencia de validación GPU en `results/`. La compartida aún usa tablas globales.
 
-**Fase 2 global implementada, pendiente de validación en Colab:** [notebook de diez mediciones e imagen](notebooks/fase2_global_colab.ipynb) y [detalle del método](docs/FASE2.md). CUDA Events mide solo el kernel y el PNG se genera desde el acumulador exportado.
+**Fase 2 global completada y validada en Colab:** [notebook de diez mediciones e imagen](notebooks/fase2_global_colab.ipynb) y [detalle del método](docs/FASE2.md). CUDA Events mide solo el kernel: promedio de **1.555098 ms** en diez ejecuciones en Tesla T4, todas coincidentes con CPU. El PNG contiene 12 líneas seleccionadas del acumulador GPU. Ver [evidencia real](results/fase2-global/).
 
-**Pendiente del equipo:** registrar tiempos reales en las tres versiones, combinar constante + compartida, comparación de tiempos e informe/presentación. Ver [revisión completa](docs/PENDIENTES.md).
+**Pendiente del equipo:** registrar tiempos reales de las variantes constante y final con las tres memorias, combinar constante + compartida, comparación de tiempos e informe/presentación. Ver [revisión completa](docs/PENDIENTES.md).
 
 ## Estructura
 

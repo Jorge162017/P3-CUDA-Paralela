@@ -2,7 +2,16 @@
 
 ## Estado
 
-Implementación lista para comprobar en GPU con `notebooks/fase2_global_colab.ipynb`. No se han registrado todavía diez mediciones reales de esta fase ni se atribuyen tiempos a las pruebas locales de CPU.
+**Completada y validada en Colab**, con Tesla T4 y CUDA Toolkit 13.0, ejecutando el commit `d599c4b9be44a66c3bf73670c9a68303eb6b12a6`. Las diez ejecuciones coincidieron con la CPU. Evidencia: [carpeta de resultados](../results/fase2-global/).
+
+| Medida del kernel | Milisegundos |
+| --- | --- |
+| Promedio (10 ejecuciones) | 1.555098 |
+| Desviación estándar muestral | 0.008018 |
+| Mínimo | 1.542368 |
+| Máximo | 1.566688 |
+
+Se generó el [PNG con 12 líneas a color](../results/fase2-global/global-lines.png), con umbral automático de aproximadamente 3541.55 votos. Se revisaron las diez filas del CSV y su resumen; la regeneración local desde el acumulador GPU produjo los mismos píxeles que el PNG entregado. Las líneas representan picos discretizados de Hough, no segmentos ajustados exactamente a cada borde visible.
 
 ## Medición del kernel
 
@@ -43,7 +52,7 @@ El umbral puede cambiarse con `--threshold 4000` y el límite con `--max-lines 8
 - Pruebas automatizadas de líneas verticales, horizontales y diagonales; imagen negra; umbral estricto; supresión de duplicados, incluida la unión 0/180 grados; color del PNG, conservación del fondo y rechazo de dimensiones inválidas.
 - Los tests se ejecutan con `python3 -m unittest discover -s tests -v` después de instalar Pillow.
 
-Estas comprobaciones no validan CUDA Events en GPU. Para cerrar la fase, ejecutar el notebook y agregar a Git el CSV, el log, el resumen, el acumulador, el PNG y el JSON de líneas de la sesión real.
+Las pruebas locales se complementaron con la ejecución GPU real documentada arriba. El CSV, log, resumen, acumulador, PNG y JSON de líneas de Colab están conservados en `results/fase2-global/`.
 
 ## Referencias
 
