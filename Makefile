@@ -36,4 +36,4 @@ build/hough_cpu: src/houghBase.cu common/pgm.cpp common/pgm.h | build
 
 .PHONY: colab-package
 colab-package: | build
-	python3 -c "import zipfile; from pathlib import Path; files = [Path('Makefile'), *Path('src').glob('*.cu'), *Path('common').glob('*.h'), *Path('common').glob('*.cpp'), *Path('data').glob('*.pgm')]; z = zipfile.ZipFile('build/proyecto-colab.zip', 'w', zipfile.ZIP_DEFLATED); [z.write(p, p.as_posix()) for p in files]; z.close()"
+	python3 -c "import zipfile; from pathlib import Path; files = [Path('Makefile'), *Path('src').glob('*.cu'), *Path('common').glob('*.h'), *Path('common').glob('*.cpp'), *Path('data').glob('*.pgm'), *Path('scripts').glob('*.py'), Path('requirements.txt')]; z = zipfile.ZipFile('build/proyecto-colab.zip', 'w', zipfile.ZIP_DEFLATED); [z.write(p, p.as_posix()) for p in files]; z.close()"
