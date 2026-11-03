@@ -1,0 +1,17 @@
+ronda,variant,momento,pstate,sm_mhz,mem_mhz,temp_c,power_w
+ronda1,global,antes,P0, 1590, 5000, 43, 38.54
+ronda1,global,despues,P0, 1590, 5000, 43, 37.67
+ronda1,constante,antes,P0, 1590, 5000, 43, 37.67
+ronda1,constante,despues,P0, 1590, 5000, 43, 41.58
+ronda2,constante,antes,P0, 1590, 5000, 43, 34.63
+ronda2,constante,despues,P0, 1590, 5000, 43, 35.62
+ronda2,global,antes,P0, 1590, 5000, 43, 35.62
+ronda2,global,despues,P0, 1590, 5000, 43, 37.48
+ronda3,global,antes,P0, 1590, 5000, 43, 37.48
+ronda3,global,despues,P0, 1590, 5000, 43, 39.82
+ronda3,constante,antes,P0, 1590, 5000, 43, 35.33
+ronda3,constante,despues,P0, 1590, 5000, 44, 35.23
+ronda4,constante,antes,P0, 1590, 5000, 43, 35.23
+ronda4,constante,despues,P0, 1590, 5000, 44, 36.12
+ronda4,global,antes,P0, 1590, 5000, 44, 36.12
+ronda4,global,despues,P0, 1590, 5000, 44, 38.74

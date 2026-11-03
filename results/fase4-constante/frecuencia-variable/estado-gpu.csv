@@ -1,0 +1,9 @@
+ronda,variant,pstate,sm_mhz,mem_mhz,temp_c,power_w
+ronda1,global,P0, 1590, 5000, 44, 37.87
+ronda1,constante,P0, 1590, 5000, 44, 35.90
+ronda2,constante,P0, 1590, 5000, 43, 36.88
+ronda2,global,P0, 1590, 5000, 43, 36.00
+ronda3,global,P0, 1590, 5000, 43, 36.19
+ronda3,constante,P0, 1260, 5000, 43, 30.40
+ronda4,constante,P0, 1185, 5000, 43, 30.90
+ronda4,global,P0, 1380, 5000, 43, 31.78

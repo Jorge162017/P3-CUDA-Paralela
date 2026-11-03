@@ -16,7 +16,9 @@ La fase 1 está implementada: lector PGM P2/P5 de 8 bits, kernel con memoria glo
 
 **Fase 2 global completada y validada en Colab:** [notebook de diez mediciones e imagen](notebooks/fase2_global_colab.ipynb) y [detalle del método](docs/FASE2.md). CUDA Events mide solo el kernel: promedio de **1.555098 ms** en diez ejecuciones en Tesla T4, todas coincidentes con CPU. El PNG contiene 12 líneas seleccionadas del acumulador GPU. Ver [evidencia real](results/fase2-global/).
 
-**Pendiente del equipo:** registrar tiempos reales de las variantes constante y final con las tres memorias, combinar constante + compartida, comparación de tiempos e informe/presentación. Ver [revisión completa](docs/PENDIENTES.md).
+**Fase 4 constante completada:** en la misma sesión de Colab, con la GPU estable, la versión constante promedia 0.8510 ms frente a 0.8660 ms de la global (−1.73 %, 40 mediciones cada una). Ver [análisis](docs/memoria-constante.md) y [resultados](results/fase4-constante/final/).
+
+**Pendiente del equipo:** registrar tiempos reales de la variante final con las tres memorias, combinar constante + compartida, comparación de tiempos e informe/presentación. Ver [revisión completa](docs/PENDIENTES.md).
 
 ## Estructura
 

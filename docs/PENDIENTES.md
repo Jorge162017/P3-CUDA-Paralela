@@ -13,13 +13,13 @@
 | --- | --- | --- |
 | Tú, fase 2 — completada | Diez mediciones globales verificadas: promedio 1.555098 ms, Tesla T4 | `results/fase2-global/global-times.csv` y log |
 | Tú, fase 2 — completada | PNG con 12 líneas, umbral aproximado 3541.55 votos, verificado contra acumulador GPU | `results/fase2-global/global-lines.png` y JSON |
-| Compañero 2, fase 4 | Medir constante + global al menos 10 veces y comparar con global | CSV, resumen de tiempos y análisis del efecto de memoria constante |
+| Compañero 2, fase 4 — completada | 40 mediciones por versión en la misma sesión, GPU estable a 1590 MHz: global 0.8660 ms, constante 0.8510 ms (−1.73 %) | `results/fase4-constante/final/` y análisis en `docs/memoria-constante.md` |
 | Compañero 3, completar fase 5 | Combinar tablas constantes con el acumulador compartido | Variante final global + constante + compartida y nueva validación GPU |
 | Compañero 3, fase 6 | Medir la variante final al menos 10 veces en iguales condiciones | CSV y tabla o gráfica comparativa de las tres versiones requeridas |
 | Los tres; integración compañero 3 | Actualizar diagramas, análisis y conclusiones según tiempos reales | Informe final según guía UVG y al menos 3 referencias |
 | Los tres | Exportar informe a PDF y preparar presentación | PDF final y presentación ejecutiva |
 
-La variante global ya incorpora CUDA Events y exporta el acumulador; `scripts/render_lines.py` genera el PNG. El notebook `notebooks/fase2_global_colab.ipynb` ya se ejecutó y su evidencia GPU real está en `results/fase2-global/`. Las otras variantes todavía no incorporan mediciones. La captura `results/evidencia.png` es evidencia de ejecución; no hay una implementación que genere la imagen de detección pedida. La variante compartida actual es intermedia, no la variante final con las tres memorias. Los diagramas de memoria constante y compartida ya existen; falta actualizar el de la variante final y analizar resultados medidos.
+La variante global ya incorpora CUDA Events y exporta el acumulador; `scripts/render_lines.py` genera el PNG. El notebook `notebooks/fase2_global_colab.ipynb` ya se ejecutó y su evidencia GPU real está en `results/fase2-global/`. La variante constante también mide con CUDA Events y se comparó con la global en una misma sesión (`notebooks/fase4_constante_colab.ipynb`); la compartida todavía no incorpora mediciones. La captura `results/evidencia.png` es evidencia de ejecución; no hay una implementación que genere la imagen de detección pedida. La variante compartida actual es intermedia, no la variante final con las tres memorias. Los diagramas de memoria constante y compartida ya existen; falta actualizar el de la variante final y analizar resultados medidos.
 
 ## Entrega del avance del laboratorio
 
