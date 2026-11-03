@@ -1,10 +1,15 @@
 /*
  * Basado en el ejemplo de G. Barlas (diciembre 2014), licencia GNU GPL 3.0.
- * Fase 3: Transformada de Hough con memoria global y constante, y referencia CPU.
+ * Fases 3 y 4: Hough con memoria global y constante, medida con CUDA Events.
  * Las tablas de cosenos y senos pasan a memoria constante; la imagen y el
- * acumulador siguen en memoria global.
+ * acumulador siguen en memoria global. El protocolo de medición es el mismo
+ * de la versión global para que los tiempos sean comparables.
  */
 #include <cmath>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <numeric>
 #include <cstdio>
 #include <stdexcept>
 #include <string>
@@ -54,6 +59,18 @@ void checkCuda(cudaError_t status, const char* operation) {
         throw std::runtime_error(std::string(operation) + ": " + cudaGetErrorString(status));
 }
 
+struct CudaEvent {
+    cudaEvent_t value{};
+    CudaEvent() { checkCuda(cudaEventCreate(&value), "crear evento"); }
+    ~CudaEvent() {
+        const cudaError_t status = cudaEventDestroy(value);
+        if (status != cudaSuccess)
+            std::fprintf(stderr, "cudaEventDestroy: %s\n", cudaGetErrorString(status));
+    }
+    CudaEvent(const CudaEvent&) = delete;
+    CudaEvent& operator=(const CudaEvent&) = delete;
+};
+
 // RAII: libera cada asignación incluso cuando se lanza una excepción.
 // Se declara antes del resto de recursos GPU para reiniciar el dispositivo al final.
 struct DeviceSession {
@@ -101,11 +118,27 @@ __global__ void GPU_HoughTranConst(const unsigned char* pic, int w, int h,
 #endif
 
 int main(int argc, char** argv) {
-    if (argc != 2) {
-        std::fprintf(stderr, "Uso: %s imagen.pgm\n", argv[0]);
+    if (argc < 2) {
+        std::fprintf(stderr, "Uso: %s imagen.pgm [--runs N] [--output directorio]\n", argv[0]);
         return 1;
     }
     try {
+        int runs = 1;
+        std::string outputDirectory;
+        for (int i = 2; i < argc; ++i) {
+            const std::string option = argv[i];
+            if (i + 1 >= argc) throw std::runtime_error("Falta valor para " + option);
+            const std::string value = argv[++i];
+            if (option == "--runs") {
+                std::size_t used = 0;
+                runs = std::stoi(value, &used);
+                if (used != value.size() || runs < 1 || runs > 10000)
+                    throw std::runtime_error("--runs debe estar entre 1 y 10000");
+            } else if (option == "--output") {
+                if (value.empty()) throw std::runtime_error("Directorio de salida vacio");
+                outputDirectory = value;
+            } else throw std::runtime_error("Opcion desconocida: " + option);
+        }
         const PGMImage image(argv[1]);
         const int w = image.x_dim, h = image.y_dim;
         const float rMax = std::sqrt(1.0 * w * w + 1.0 * h * h) / 2;
@@ -123,8 +156,11 @@ int main(int argc, char** argv) {
         for (int value : cpu) votes += value;
         for (unsigned char pixel : image.pixels) active += pixel > 0;
         if (votes != active * degreeBins) throw std::runtime_error("Conteo CPU incorrecto");
+        if (runs != 1) throw std::runtime_error("Las mediciones requieren compilar con CUDA");
+        if (!outputDirectory.empty()) throw std::runtime_error("--output requiere compilar con CUDA");
         std::printf("CPU OK: %lld pixeles activos, %lld votos. GPU NO ejecutada.\n", active, votes);
 #else
+        if (!outputDirectory.empty()) std::filesystem::create_directories(outputDirectory);
         DeviceSession session;
         cudaDeviceProp properties{};
         checkCuda(cudaGetDeviceProperties(&properties, 0), "cudaGetDeviceProperties");
@@ -137,24 +173,59 @@ int main(int argc, char** argv) {
         // cudaFree: existen mientras el módulo esté cargado y se llenan desde el host.
         checkCuda(cudaMemcpyToSymbol(d_Cos, cosines.data(), degreeBins * sizeof(float)), "copiar cosenos a memoria constante");
         checkCuda(cudaMemcpyToSymbol(d_Sin, sines.data(), degreeBins * sizeof(float)), "copiar senos a memoria constante");
-        checkCuda(cudaMemset(acc.data, 0, accumulatorSize * sizeof(int)), "inicializar acumulador");
         const unsigned int threads = 256;
         const unsigned int blocks = (image.pixels.size() + threads - 1) / threads;
-        GPU_HoughTranConst<<<blocks, threads>>>(input.data, w, h, acc.data, rMax, rScale);
-        checkCuda(cudaGetLastError(), "lanzar kernel");
-        checkCuda(cudaDeviceSynchronize(), "ejecutar kernel");
+        auto launch = [&]() {
+            GPU_HoughTranConst<<<blocks, threads>>>(input.data, w, h, acc.data, rMax, rScale);
+            checkCuda(cudaGetLastError(), "lanzar kernel");
+        };
+        // Una ejecución de calentamiento, excluida de las mediciones.
+        checkCuda(cudaMemset(acc.data, 0, accumulatorSize * sizeof(int)), "limpiar calentamiento");
+        launch();
+        checkCuda(cudaDeviceSynchronize(), "calentamiento");
+        CudaEvent start, stop;
+        std::vector<float> times;
         std::vector<int> gpu(accumulatorSize);
-        checkCuda(cudaMemcpy(gpu.data(), acc.data, accumulatorSize * sizeof(int), cudaMemcpyDeviceToHost), "copiar acumulador");
-        int mismatches = 0;
-        for (int i = 0; i < accumulatorSize; ++i) {
-            if (cpu[i] != gpu[i]) {
-                if (mismatches < 5)
-                    std::fprintf(stderr, "Bin %d: CPU=%d GPU=%d\n", i, cpu[i], gpu[i]);
-                ++mismatches;
+        for (int run = 1; run <= runs; ++run) {
+            // Mismo stream: el borrado termina antes de la marca de inicio.
+            // Copias, memset, validación y exportación no entran en el tiempo.
+            checkCuda(cudaMemset(acc.data, 0, accumulatorSize * sizeof(int)), "reiniciar acumulador");
+            checkCuda(cudaEventRecord(start.value), "registrar inicio");
+            launch();
+            checkCuda(cudaEventRecord(stop.value), "registrar fin");
+            checkCuda(cudaEventSynchronize(stop.value), "esperar fin");
+            float milliseconds = 0;
+            checkCuda(cudaEventElapsedTime(&milliseconds, start.value, stop.value), "medir kernel");
+            checkCuda(cudaMemcpy(gpu.data(), acc.data, accumulatorSize * sizeof(int), cudaMemcpyDeviceToHost), "copiar acumulador");
+            int mismatches = 0;
+            for (int i = 0; i < accumulatorSize; ++i) {
+                if (cpu[i] != gpu[i]) {
+                    if (mismatches < 5)
+                        std::fprintf(stderr, "Bin %d: CPU=%d GPU=%d\n", i, cpu[i], gpu[i]);
+                    ++mismatches;
+                }
             }
+            if (mismatches) throw std::runtime_error(std::to_string(mismatches) + " bins distintos entre CPU y GPU");
+            times.push_back(milliseconds);
+            std::printf("Ejecucion %02d: %.6f ms; CPU/GPU OK\n", run, milliseconds);
         }
-        std::printf("Bloques: %u; hilos por bloque: %u\n", blocks, threads);
-        if (mismatches) throw std::runtime_error(std::to_string(mismatches) + " bins distintos entre CPU y GPU");
+        std::printf("Bloques: %u; hilos por bloque: %u; calentamientos: 1\n", blocks, threads);
+        const double mean = std::accumulate(times.begin(), times.end(), 0.0) / times.size();
+        std::printf("Promedio del kernel (%d ejecuciones): %.6f ms\n", runs, mean);
+        if (!outputDirectory.empty()) {
+            int runtime = 0, driver = 0;
+            checkCuda(cudaRuntimeGetVersion(&runtime), "version runtime");
+            checkCuda(cudaDriverGetVersion(&driver), "version driver");
+            // Mismas columnas que global-times.csv para comparar ambas bitácoras.
+            std::ofstream csv(outputDirectory + "/constante-times.csv");
+            csv.exceptions(std::ios::failbit | std::ios::badbit);
+            csv << "variant,run,kernel_ms,gpu,cuda_runtime,cuda_driver,width,height,blocks,threads,warmup_runs,validated\n";
+            for (std::size_t i = 0; i < times.size(); ++i)
+                csv << "constante," << i + 1 << ',' << std::fixed << std::setprecision(6) << times[i]
+                    << ',' << std::quoted(properties.name) << ',' << runtime << ',' << driver
+                    << ',' << w << ',' << h << ',' << blocks << ',' << threads << ",1,true\n";
+            csv.close();
+        }
         std::puts("VALIDACION OK: CPU y GPU coinciden en todos los bins.");
 #endif
         return 0;
