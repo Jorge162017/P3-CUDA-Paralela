@@ -12,7 +12,9 @@ La fase 1 está implementada: lector PGM P2/P5 de 8 bits, kernel con memoria glo
 
 **Validado en Colab:** Tesla T4 con CUDA Toolkit 13.0. CPU y GPU coinciden para la imagen original, una imagen de bloque parcial y una imagen negra. Ver [evidencia de la fase 1](results/fase1-colab.txt). También se comprobó el rechazo de argumentos ausentes y archivos inexistentes.
 
-**Pendiente:** medición con CUDA Events e imágenes de salida (fase 2), memoria constante y memoria compartida.
+**Avances de compañeros integrados:** [global + constante](docs/memoria-constante.md) y [global + compartida](docs/memoria-compartida.md), ambas con evidencia de validación GPU en `results/`. La compartida aún usa tablas globales.
+
+**Pendiente:** CUDA Events (al menos 10 mediciones por versión), imagen con líneas a color, combinar constante + compartida, comparación de tiempos e informe/presentación. Ver [revisión completa](docs/PENDIENTES.md).
 
 ## Estructura
 
@@ -39,6 +41,8 @@ Desde la raíz del repositorio, en un equipo CUDA:
 ```sh
 make
 ./build/hough data/runway.pgm
+./build/hough_const data/runway.pgm
+./build/hough_shared data/runway.pgm
 ```
 
 Para limpiar los archivos compilados:

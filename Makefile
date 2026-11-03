@@ -6,9 +6,15 @@ NVCCFLAGS ?= -O2 -std=c++17 --fmad=false
 TARGET := build/hough
 
 .PHONY: all clean
-all: $(TARGET)
+all: $(TARGET) build/hough_const build/hough_shared
 
 $(TARGET): src/houghBase.cu common/pgm.h build/pgm.o | build
+	$(NVCC) $(CPPFLAGS) $(NVCCFLAGS) $< build/pgm.o -o $@
+
+build/hough_const: src/houghConst.cu common/pgm.h build/pgm.o | build
+	$(NVCC) $(CPPFLAGS) $(NVCCFLAGS) $< build/pgm.o -o $@
+
+build/hough_shared: src/houghShared.cu common/pgm.h build/pgm.o | build
 	$(NVCC) $(CPPFLAGS) $(NVCCFLAGS) $< build/pgm.o -o $@
 
 build/pgm.o: common/pgm.cpp common/pgm.h | build

@@ -35,4 +35,4 @@ Los avances se reflejan en el repositorio.
 
 ## Pendientes
 
-Quedan por hacer la medición del kernel con CUDA Events y su registro en `results/`, la imagen con las líneas detectadas dibujadas a color, la integración de las tablas constantes en la variante con memoria compartida para obtener la versión final con las tres memorias, la comparación de tiempos con su análisis y diagramas, y el informe final con la presentación. A
+Quedan por hacer la medición del kernel con CUDA Events y su registro en `results/`, la imagen con las líneas detectadas dibujadas a color, la integración de las tablas constantes en la variante con memoria compartida para obtener la versión final con las tres memorias, la comparación de tiempos con su análisis y diagramas, y el informe final con la presentación.

@@ -69,8 +69,8 @@ flowchart LR
 
 ## Cómo ejecutarlo
 
-1. Subir la rama `feat/memoria-compartida` a GitHub.
-2. Abrir `notebooks/fase5_compartida_colab.ipynb` en Google Colab con GPU (T4). El notebook clona la rama, compila, ejecuta las pruebas y descarga `results/compartida-validacion.txt`.
+1. Usar la rama `main`, que ya integra los avances de memoria compartida.
+2. Abrir `notebooks/fase_compartida_colab.ipynb` en Google Colab con GPU (T4). El notebook clona `main`, compila, ejecuta las pruebas y descarga `results/compartida-validacion.txt`.
 
 Comando de compilación equivalente:
 
@@ -84,7 +84,7 @@ nvcc -I. -O2 -std=c++17 --fmad=false src/houghShared.cu common/pgm.cpp -o build/
 
 **Comprobado localmente (sin GPU):** `src/houghShared.cu` pasa una revisión de sintaxis con `g++` usando un simulador mínimo de las funciones CUDA, tanto en la ruta de GPU como en `-DHOUGH_CPU_ONLY`. Esto **no** sustituye compilar con `nvcc` ni ejecutar en GPU.
 
-**En GPU (Colab, Tesla T4, driver 580.82.07, CUDA 13.0 / nvcc V13.0.88):** todas las pruebas pasaron. Se ejecutó el commit `fa1e80ec3f17b3a9f80e00a6329d4fb6292f8dd0`, clonado de la rama `feat/memoria-compartida`, compilado con `nvcc -I. -O2 -std=c++17 --fmad=false src/houghShared.cu common/pgm.cpp -o build/hough_shared`. La salida completa está en [results/compartida-validacion.txt](../results/compartida-validacion.txt) y en las salidas guardadas de `notebooks/fase5_compartida_colab.ipynb`.
+**En GPU (Colab, Tesla T4, driver 580.82.07, CUDA 13.0 / nvcc V13.0.88):** todas las pruebas pasaron. Se ejecutó el commit `fa1e80ec3f17b3a9f80e00a6329d4fb6292f8dd0`, clonado de la rama `feat/memoria-compartida`, compilado con `nvcc -I. -O2 -std=c++17 --fmad=false src/houghShared.cu common/pgm.cpp -o build/hough_shared`. La salida completa está en [results/compartida-validacion.txt](../results/compartida-validacion.txt) y en las salidas guardadas de `notebooks/fase_compartida_colab.ipynb`.
 
 | Caso | Bloques × hilos; píxeles en el último bloque | Resultado |
 | --- | --- | --- |
