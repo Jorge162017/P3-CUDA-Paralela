@@ -14,7 +14,7 @@ Las tres variantes están integradas en `main` y tienen validación contra CPU e
 
 La variante final redujo el tiempo un 18.19 % frente a la global con ese protocolo. La cifra depende del tramo medido; con los cien lanzamientos completos la reducción es aproximadamente 16 %. Ver [análisis y limitaciones](docs/memoria-final.md) y [bitácoras](results/fase6-tres-memorias/final/). No comparar directamente estos tiempos con los de sesiones anteriores.
 
-La versión global tiene [PNG y evidencia](results/fase2-global/). La versión final ahora exporta su propio acumulador y reutiliza el generador de PNG. **Salida final validada en Colab:** [PNG, acumulador y logs](results/salida-final/). Coincidencia con CPU para la imagen original, imagen negra y bloques parciales de 21 y 300 píxeles. **Informe final listo:** [PDF](docs/INFORME_FINAL.pdf) y [fuente editable](docs/INFORME_FINAL.md). Falta preparar la presentación. Ver [pendientes](docs/PENDIENTES.md).
+La versión global tiene [PNG y evidencia](results/fase2-global/). La versión final ahora exporta su propio acumulador y reutiliza el generador de PNG. **Salida final validada en Colab:** [PNG, acumulador y logs](results/salida-final/). Coincidencia con CPU para la imagen original, imagen negra y bloques parciales de 21 y 300 píxeles. **Informe final listo:** [PDF](docs/INFORME_FINAL.pdf) y [fuente editable](docs/INFORME_FINAL.md). La presentación ejecutiva se prepara a partir del informe.
 
 ## Estructura
 
@@ -24,8 +24,8 @@ common/       Lector PGM y exportación común del acumulador
 scripts/      Generador de PNG con líneas seleccionadas
 notebooks/    Ejecución y validación en Colab
 results/      Bitácoras, CSV, gráficos e imágenes
-tests/       Pruebas del generador de imagen
-docs/         Enunciado, análisis y material para el informe
+tests/        Pruebas del generador de imagen
+docs/         Informe final, enunciado y fuentes editables
 ```
 
 ## Compilación
@@ -80,9 +80,6 @@ La primera orden solo ejecuta la referencia CPU. Las pruebas de Python comprueba
 [Informe final PDF](docs/INFORME_FINAL.pdf): 15 páginas con carátula UVG, índice, algoritmo, implementación, diagramas, comparación, salida gráfica, conclusiones, referencias y apéndices con los 180 tiempos. [Editar o regenerar](docs/GENERAR_INFORME.md).
 
 - [Enunciado](docs/Proyecto%203%20-%20CUDA.pdf).
-- [Memoria constante](docs/memoria-constante.md).
-- [Memoria compartida intermedia](docs/memoria-compartida.md).
 - [Variante final y comparación](docs/memoria-final.md).
-- [Estado de entrega](docs/PENDIENTES.md).
 
-Entregar código, mediciones, informe PDF, enlace al repositorio y presentación ejecutiva. Cada integrante registra sus avances en commits separados, conservando su autoría. Los compilados y el plan local están excluidos de Git.
+Entregar código, mediciones, informe PDF, enlace al repositorio y presentación ejecutiva. Cada integrante registra sus avances en commits separados, conservando su autoría. Los compilados, los archivos de editor y las cachés de Python están excluidos de Git.
