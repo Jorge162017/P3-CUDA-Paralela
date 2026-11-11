@@ -1,0 +1,12 @@
+{
+  "university": "Universidad del Valle de Guatemala",
+  "course": "Computación Paralela y Distribuida",
+  "title": "Transformada de Hough con CUDA",
+  "subtitle": "Evaluación de memoria global, constante y compartida",
+  "date": "11 de noviembre de 2026",
+  "authors": [
+    {"name": "Jorge López", "id": "221038"},
+    {"name": "Angel Herrarte", "id": "22873"},
+    {"name": "Giovanni Santos", "id": "22523"}
+  ]
+}
