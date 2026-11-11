@@ -14,7 +14,7 @@ Las tres variantes están integradas en `main` y tienen validación contra CPU e
 
 La variante final redujo el tiempo un 18.19 % frente a la global con ese protocolo. La cifra depende del tramo medido; con los cien lanzamientos completos la reducción es aproximadamente 16 %. Ver [análisis y limitaciones](docs/memoria-final.md) y [bitácoras](results/fase6-tres-memorias/final/). No comparar directamente estos tiempos con los de sesiones anteriores.
 
-La versión global tiene [PNG y evidencia](results/fase2-global/). La versión final ahora exporta su propio acumulador y reutiliza el generador de PNG. **Salida final validada en Colab:** [PNG, acumulador y logs](results/salida-final/). Coincidencia con CPU para la imagen original, imagen negra y bloques parciales de 21 y 300 píxeles. **Faltan el informe PDF y la presentación.** Ver [pendientes](docs/PENDIENTES.md).
+La versión global tiene [PNG y evidencia](results/fase2-global/). La versión final ahora exporta su propio acumulador y reutiliza el generador de PNG. **Salida final validada en Colab:** [PNG, acumulador y logs](results/salida-final/). Coincidencia con CPU para la imagen original, imagen negra y bloques parciales de 21 y 300 píxeles. **Informe final listo:** [PDF](docs/INFORME_FINAL.pdf) y [fuente editable](docs/INFORME_FINAL.md). Falta preparar la presentación. Ver [pendientes](docs/PENDIENTES.md).
 
 ## Estructura
 
@@ -76,6 +76,8 @@ python3 -m unittest discover -s tests -v
 La primera orden solo ejecuta la referencia CPU. Las pruebas de Python comprueban geometría, selección de picos, PNG y procedencia de la variante. Estas pruebas no sustituyen ejecutar CUDA en Colab.
 
 ## Documentación y entrega
+
+[Informe final PDF](docs/INFORME_FINAL.pdf): 15 páginas con carátula UVG, índice, algoritmo, implementación, diagramas, comparación, salida gráfica, conclusiones, referencias y apéndices con los 180 tiempos. [Editar o regenerar](docs/GENERAR_INFORME.md).
 
 - [Enunciado](docs/Proyecto%203%20-%20CUDA.pdf).
 - [Memoria constante](docs/memoria-constante.md).

@@ -21,11 +21,13 @@ La ejecución real de `notebooks/salida_final_colab.ipynb` sobre el commit `0480
 - PNG con doce líneas y umbral aproximado de 3541.55 votos, reproducido y comparado píxel por píxel con el exportado de Colab.
 - CSV de una ejecución para validar la salida, conservado aparte de las mediciones comparativas de fase 6. Su tiempo aislado no sustituye el promedio del experimento comparativo.
 
-Con esta evidencia se cierra el ajuste de salida. Quedan informe PDF, presentación y revisión de entrega.
+Con esta evidencia se cierra el ajuste de salida. El informe PDF ya está generado; quedan presentación, revisión del equipo y entrega.
 
-## Informe final PDF
+## Informe final PDF — generado
 
-Integrar los materiales existentes en un documento con:
+`docs/INFORME_FINAL.pdf` tiene 15 páginas, carátula con logo UVG y los tres nombres/carnés confirmados, índice enlazado, contenido técnico, diagramas, gráfica de comparación, imagen final, conclusiones, seis referencias y dos apéndices con los 180 tiempos reportados. Se comprobó la correspondencia exacta de los tiempos con los CSV originales y se revisó la maquetación.
+
+El texto editable está en `docs/INFORME_FINAL.md`; datos de carátula en `docs/informe-config.json`; reproducción en `docs/GENERAR_INFORME.md`. El documento incluye:
 
 - Carátula, índice e introducción según guía UVG.
 - Al menos una página de contenido sobre Hough, implementación CUDA y memorias GPU.
