@@ -115,6 +115,12 @@ Otra observación sin explicación causal: la variante final tuvo menos variaci�
 3. La memoria constante aporta una mejora pequeña pero consistente (entre 1.7 % y 4.3 %).
 4. Recomendación: antes de atribuir el resultado a la ocupación o al volcado, perfilar con Nsight Compute y medir `build/hough_shared` (global + compartida) con este mismo protocolo para separar el efecto de cada memoria.
 
+## Salida gráfica de la variante final
+
+Con `--output directorio`, `build/hough_final` exporta tanto `tres-memorias-times.csv` como `tres-memorias-accumulator.json`, después de validar todos los lanzamientos. El acumulador incluye las tablas exactas y la etiqueta `tres_memorias`. La exportación ocurre fuera del intervalo CUDA Events y utiliza la misma función que la variante global.
+
+`notebooks/salida_final_colab.ipynb` ejecuta la versión final y genera su PNG a través de `scripts/render_lines.py`. Falta incorporar el ZIP real de esta nueva validación GPU; las mediciones comparativas de esta página se conservan y corresponden al commit anterior al ajuste de exportación. No se ha cambiado el kernel ni el protocolo medido.
+
 ## Cómo reproducirlo
 
 ```sh

@@ -1,32 +1,41 @@
-# Revisión después de integrar las ramas
+# Estado del proyecto antes del informe final
 
-## Avances integrados en main
+## Completado y respaldado por evidencia
 
-- Versión global con lector PGM, manejo de errores, liberación de recursos y validación CPU/GPU.
-- Compañero 2: variante global + constante, notebook, diagrama y validación en Tesla T4. Sus commits ya estaban integrados en el main remoto.
-- Compañero 3: variante global + compartida, barreras, acumulación atómica por bloque, notebook, explicación, reporte de avance y evidencia en Tesla T4. Integrada preservando sus commits.
-- Los registros en `results/` muestran coincidencia CPU/GPU para imagen original, bloques parciales e imagen negra; también prueban entradas inválidas. La revisión local no sustituye esas ejecuciones GPU.
+- Versión global, constante y final con las tres memorias integradas en `main`.
+- Lectura PGM P2/P5, validación de argumentos y CUDA, acumulación atómica, sincronización y liberación de recursos.
+- Validación CPU/GPU y pruebas de bloques parciales de las variantes originales.
+- Diez mediciones globales e imagen PNG con doce líneas: `results/fase2-global/`.
+- Comparación global/constante de fase 4 y análisis de sus condiciones: `results/fase4-constante/final/`.
+- Comparación final en la misma sesión: 60 mediciones reportadas por variante, seis rondas y validación CPU/GPU en cada lanzamiento. Promedios global 0.900314 ms, constante 0.861503 ms y final 0.736581 ms. CSV, logs, gráfica y recursos compilados en `results/fase6-tres-memorias/final/`.
+- Explicaciones, diagramas conceptuales y referencias en `memoria-constante.md`, `memoria-compartida.md` y `memoria-final.md`.
 
-## Pendientes del proyecto final
+## Salida final: implementada, falta evidencia GPU del ajuste
 
-| Responsable del plan | Trabajo pendiente | Evidencia esperada |
-| --- | --- | --- |
-| Tú, fase 2 — completada | Diez mediciones globales verificadas: promedio 1.555098 ms, Tesla T4 | `results/fase2-global/global-times.csv` y log |
-| Tú, fase 2 — completada | PNG con 12 líneas, umbral aproximado 3541.55 votos, verificado contra acumulador GPU | `results/fase2-global/global-lines.png` y JSON |
-| Compañero 2, fase 4 — completada | 40 mediciones por versión en la misma sesión, GPU estable a 1590 MHz: global 0.8660 ms, constante 0.8510 ms (−1.73 %) | `results/fase4-constante/final/` y análisis en `docs/memoria-constante.md` |
-| Compañero 3, completar fase 5 | Combinar tablas constantes con el acumulador compartido | Variante final global + constante + compartida y nueva validación GPU |
-| Compañero 3, fase 6 | Medir la variante final al menos 10 veces en iguales condiciones | CSV y tabla o gráfica comparativa de las tres versiones requeridas |
-| Los tres; integración compañero 3 | Actualizar diagramas, análisis y conclusiones según tiempos reales | Informe final según guía UVG y al menos 3 referencias |
-| Los tres | Exportar informe a PDF y preparar presentación | PDF final y presentación ejecutiva |
+La versión final ahora exporta `tres-memorias-accumulator.json` después de validar el acumulador. La misma función de exportación se comparte con la versión global en `common/hough_output.h`. El dibujo usa `scripts/render_lines.py` y conserva la etiqueta de variante `tres_memorias`.
 
-La variante global ya incorpora CUDA Events y exporta el acumulador; `scripts/render_lines.py` genera el PNG. El notebook `notebooks/fase2_global_colab.ipynb` ya se ejecutó y su evidencia GPU real está en `results/fase2-global/`. La variante constante también mide con CUDA Events y se comparó con la global en una misma sesión (`notebooks/fase4_constante_colab.ipynb`); la compartida todavía no incorpora mediciones. La captura `results/evidencia.png` es evidencia de ejecución; no hay una implementación que genere la imagen de detección pedida. La variante compartida actual es intermedia, no la variante final con las tres memorias. Los diagramas de memoria constante y compartida ya existen; falta actualizar el de la variante final y analizar resultados medidos.
+Ejecutar `notebooks/salida_final_colab.ipynb`: comprueba original, imagen negra, bloques parciales de 21 y 300 píxeles y coincidencia con el acumulador global previamente guardado. Genera el PNG y descarga un ZIP con rutas `results/salida-final/`. Incorporar esos archivos al repositorio para cerrar la validación de la nueva salida. Esta ejecución no reemplaza ni mezcla las mediciones comparativas existentes.
 
-## Entrega del avance del laboratorio
+Hasta recibir ese ZIP, no afirmar que la nueva exportación ya se ejecutó en GPU. Las comprobaciones locales cubren la serialización y el dibujo, además de la referencia CPU.
 
-`docs/avance-lab5.md` existe, pero no se encontró su PDF exportado en el repositorio. Si ya fue entregado por otra vía, conservar también una copia en `docs/`. El avance del laboratorio y el informe final son entregables distintos.
+## Informe final PDF
 
-## Compilación integrada
+Integrar los materiales existentes en un documento con:
 
-`make` compila tres ejecutables independientes: `build/hough`, `build/hough_const` y `build/hough_shared`. Ejecutar cada uno con `data/runway.pgm`. El último sigue siendo global + compartida.
+- Carátula, índice e introducción según guía UVG.
+- Al menos una página de contenido sobre Hough, implementación CUDA y memorias GPU.
+- Explicación de coordenadas, constantes y memoria compartida; diagramas de entradas, etapas y salidas.
+- Bitácoras (mínimo diez tiempos de cada variante), configuración del equipo, protocolo y comparación de la misma sesión.
+- Imagen con líneas a color y justificación del umbral.
+- Conclusiones, recomendaciones, limitaciones, al menos tres referencias confiables y apéndice.
 
-Las pruebas GPU nuevas se ejecutan en Colab: este equipo local no tiene NVIDIA. Después de integrar las tres memorias se necesita un nuevo log; los existentes corresponden a las variantes anteriores.
+Usar los resultados de fase 6 para la comparación principal. Explicar que se reportaron los últimos diez de cien lanzamientos por ronda y que el porcentaje cambia con el tramo. Las mediciones dentro de una ejecución están correlacionadas: no presentar los valores p calculados como prueba concluyente de independencia o generalización a otras GPU/imágenes.
+
+El PDF del enunciado no es el informe final. `avance-lab5.md` tampoco sustituye el informe final.
+
+## Presentación y entrega
+
+- Preparar presentación ejecutiva con participación de los tres integrantes.
+- Revisar instrucciones y rúbrica del curso para la exposición.
+- Entregar código además del enlace GitHub, bitácoras e informe PDF. Incluir la evidencia de salida final.
+- Verificar la entrega en la plataforma del curso; el repositorio no confirma por sí solo una entrega académica.

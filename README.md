@@ -1,101 +1,86 @@
 # Proyecto 3: Transformada de Hough con CUDA
 
-Proyecto de Computación Paralela y Distribuida para detectar líneas rectas en imágenes y comparar el tiempo de ejecución de tres versiones CUDA:
+Detección de líneas rectas en imágenes PGM y comparación de tres variantes: memoria global; global + constante; global + constante + compartida.
 
-1. Memoria global.
-2. Memoria global y constante.
-3. Memoria global, constante y compartida.
+## Estado
 
-## Estado actual
+Las tres variantes están integradas en `main` y tienen validación contra CPU en Colab (Tesla T4, CUDA Toolkit 13.0). La comparación final conserva 60 mediciones por variante en la misma sesión, tomadas de los últimos diez lanzamientos de seis rondas de cien.
 
-La fase 1 está implementada: lector PGM P2/P5 de 8 bits, kernel con memoria global, validación de argumentos y errores CUDA, comparación exacta CPU/GPU y liberación de recursos. La referencia CPU utiliza las mismas tablas trigonométricas que la GPU. Se desactiva la fusión de operaciones flotantes en la compilación para mantener una comparación reproducible.
+| Variante | Ejecutable | Tiempo medio del kernel |
+| --- | --- | --- |
+| Global | `build/hough` | 0.900314 ms |
+| Global + constante | `build/hough_const` | 0.861503 ms |
+| Global + constante + compartida | `build/hough_final` | 0.736581 ms |
 
-**Validado en Colab:** Tesla T4 con CUDA Toolkit 13.0. CPU y GPU coinciden para la imagen original, una imagen de bloque parcial y una imagen negra. Ver [evidencia de la fase 1](results/fase1-colab.txt). También se comprobó el rechazo de argumentos ausentes y archivos inexistentes.
+La variante final redujo el tiempo un 18.19 % frente a la global con ese protocolo. La cifra depende del tramo medido; con los cien lanzamientos completos la reducción es aproximadamente 16 %. Ver [análisis y limitaciones](docs/memoria-final.md) y [bitácoras](results/fase6-tres-memorias/final/). No comparar directamente estos tiempos con los de sesiones anteriores.
 
-**Avances de compañeros integrados:** [global + constante](docs/memoria-constante.md) y [global + compartida](docs/memoria-compartida.md), ambas con evidencia de validación GPU en `results/`. La compartida aún usa tablas globales.
-
-**Fase 2 global completada y validada en Colab:** [notebook de diez mediciones e imagen](notebooks/fase2_global_colab.ipynb) y [detalle del método](docs/FASE2.md). CUDA Events mide solo el kernel: promedio de **1.555098 ms** en diez ejecuciones en Tesla T4, todas coincidentes con CPU. El PNG contiene 12 líneas seleccionadas del acumulador GPU. Ver [evidencia real](results/fase2-global/).
-
-**Fase 4 constante completada:** en la misma sesión de Colab, con la GPU estable, la versión constante promedia 0.8510 ms frente a 0.8660 ms de la global (−1.73 %, 40 mediciones cada una). Ver [análisis](docs/memoria-constante.md) y [resultados](results/fase4-constante/final/).
-
-**Pendiente del equipo:** registrar tiempos reales de la variante final con las tres memorias, combinar constante + compartida, comparación de tiempos e informe/presentación. Ver [revisión completa](docs/PENDIENTES.md).
+La versión global tiene [PNG y evidencia](results/fase2-global/). La versión final ahora exporta su propio acumulador y reutiliza el generador de PNG. **Falta ejecutar en Colab la nueva salida final y agregar su evidencia**, completar el informe PDF y preparar la presentación. Ver [pendientes](docs/PENDIENTES.md).
 
 ## Estructura
 
 ```text
-src/houghBase.cu             Versión global y referencia CPU
-common/                     Lector PGM P2/P5 de 8 bits
-data/                      Imagen de prueba (runway.pgm)
-docs/                       Enunciado y futuro informe
-results/                    Mediciones e imágenes generadas
-notebooks/fase1_colab.ipynb   Ejecución guiada en Colab
-Makefile                    Compilación
+src/          Variantes global, constante, compartida intermedia y final
+common/       Lector PGM y exportación común del acumulador
+scripts/      Generador de PNG con líneas seleccionadas
+notebooks/    Ejecución y validación en Colab
+results/      Bitácoras, CSV, gráficos e imágenes
+tests/       Pruebas del generador de imagen
+docs/         Enunciado, análisis y material para el informe
 ```
 
-## Requisitos
+## Compilación
 
-- GPU NVIDIA compatible con el CUDA Toolkit instalado.
-- Compilador `nvcc`, compilador C++ compatible y `make`.
-- Archivos del lector PGM en `common/`.
-
-## Compilar y ejecutar
-
-Desde la raíz del repositorio, en un equipo CUDA:
+Requiere GPU NVIDIA, CUDA Toolkit con `nvcc`, compilador C++17 compatible y `make`. Para el dibujo se requiere Python y Pillow.
 
 ```sh
 make
 ./build/hough data/runway.pgm
 ./build/hough_const data/runway.pgm
-./build/hough_shared data/runway.pgm
+./build/hough_final data/runway.pgm
 ```
 
-Para limpiar los archivos compilados:
+`build/hough_shared` conserva la variante intermedia global + compartida. La versión final usa `src/houghSharedConst.cu`. Todos los programas comparan el acumulador contra CPU y devuelven error ante diferencias o fallos de CUDA. `make clean` elimina los compilados.
+
+## Salida final con líneas a color
 
 ```sh
-make clean
+./build/hough_final data/runway.pgm --runs 1 --output results/salida-final
+python3 -m pip install -r requirements.txt
+python3 scripts/render_lines.py --image data/runway.pgm --accumulator results/salida-final/tres-memorias-accumulator.json --output results/salida-final/tres-memorias-lines.png
 ```
 
-La ejecución correcta debe mostrar `VALIDACION OK: CPU y GPU coinciden en todos los bins.` Un error de argumentos, lectura, CUDA o diferencias entre acumuladores devuelve un código distinto de cero.
+El acumulador se exporta después de validar los lanzamientos, fuera del tiempo medido, y conserva dimensiones y tablas trigonométricas exactas. El PNG superpone hasta doce líneas con votos mayores que promedio + dos desviaciones estándar, suprimiendo líneas vecinas. El JSON junto al PNG registra umbral, votos y coordenadas. Se puede ajustar con `--threshold` y `--max-lines`. El radio representativo es el centro del bin, por lo que el dibujo conserva la aproximación de la discretización.
 
-## Google Colab sin GPU local
+El [notebook de salida final](notebooks/salida_final_colab.ipynb) compila desde `main`, ejecuta la versión final, compara también el acumulador con la evidencia global, prueba imágenes negras y bloques parciales, genera el PNG y descarga `salida-final.zip`. No requiere subir el código manualmente. Esta validación guarda sus archivos en `results/salida-final/` y conserva las bitácoras comparativas previas.
 
-1. Ejecuta `make colab-package` en tu computadora.
-2. Abre [el notebook](notebooks/fase1_colab.ipynb) en Google Colab mediante **Subir notebook**.
-3. Activa un entorno con GPU y ejecuta las celdas en orden.
-4. Cuando se solicite, sube `build/proyecto-colab.zip`.
-5. Descarga la evidencia y guárdala en `results/fase1-colab.txt` para un commit posterior.
+## Mediciones
 
-El notebook instala y carga `nvcc4jupyter`, ejecuta el programa mediante `%%cuda` y verifica el ejecutable con el Makefile. También comprueba una imagen negra, un bloque parcial y entradas inválidas. Consulta la [documentación de nvcc4jupyter](https://nvcc4jupyter.readthedocs.io/en/latest/usage.html).
+```sh
+./build/hough data/runway.pgm --runs 10 --output results/mi-global
+./build/hough_const data/runway.pgm --runs 10 --output results/mi-constante
+./build/hough_final data/runway.pgm --runs 10 --output results/mi-final
+```
 
-## Comprobación local sin CUDA
+Los programas usan CUDA Events alrededor del kernel, un calentamiento excluido y reinicio del acumulador antes de cada ejecución. Las copias, la validación y la exportación quedan fuera del tiempo. Para comparar versiones en condiciones semejantes, usar [el notebook de las tres memorias](notebooks/fase6_tres_memorias_colab.ipynb), cuyo protocolo y resultados se explican en [memoria-final.md](docs/memoria-final.md).
+
+Otros notebooks: [fase 1](notebooks/fase1_colab.ipynb), [global e imagen](notebooks/fase2_global_colab.ipynb), [constante](notebooks/constante_colab.ipynb), [comparación global/constante](notebooks/fase4_constante_colab.ipynb). El notebook de fase 1 usa un ZIP que puede crearse con `make colab-package`.
+
+## Comprobación local sin GPU
 
 ```sh
 make cpu-check
-```
-
-Solo comprueba lectura de imagen y conteo de votos CPU; **no valida la GPU**. Las tablas y vectores CPU se liberan automáticamente; los buffers GPU usan RAII y el dispositivo se reinicia al terminar.
-
-## Resultados y entrega
-
-- Completar las tres versiones y comparar sus resultados con la CPU.
-- Medir el kernel con CUDA Events: al menos 10 mediciones por versión.
-- Guardar una imagen PNG o JPG con las líneas detectadas a color.
-- Documentar el uso de memoria constante y compartida con explicaciones y diagramas.
-- Entregar código, bitácora de tiempos, informe PDF, enlace al repositorio y presentación oral.
-
-Consultar los requisitos completos en [el enunciado](docs/Proyecto%203%20-%20CUDA.pdf).
-
-## Colaboración
-
-Subir avances en commits pequeños, separados y con mensajes claros. Cada integrante debe registrar sus propias contribuciones: no acumular todo el proyecto en uno o dos commits. Actualizar este README cuando cambien los comandos o se complete una funcionalidad.
-
-## Medir la variante global y dibujar las líneas
-
-```sh
-make build/hough
-./build/hough data/runway.pgm --runs 10 --output results/fase2-global
 python3 -m pip install -r requirements.txt
-python3 scripts/render_lines.py --image data/runway.pgm --accumulator results/fase2-global/global-accumulator.json --output results/fase2-global/global-lines.png
+python3 -m unittest discover -s tests -v
 ```
 
-En Colab, [fase2_global_colab.ipynb](notebooks/fase2_global_colab.ipynb) clona `main`, compila, ejecuta diez mediciones en una celda, muestra sus resultados y luego genera la imagen en otra celda. No requiere subir un ZIP del código. El ZIP descargado contiene la evidencia que se incorporará al repositorio después de ejecutar.
+La primera orden solo ejecuta la referencia CPU. Las pruebas de Python comprueban geometría, selección de picos, PNG y procedencia de la variante. Estas pruebas no sustituyen ejecutar CUDA en Colab.
+
+## Documentación y entrega
+
+- [Enunciado](docs/Proyecto%203%20-%20CUDA.pdf).
+- [Memoria constante](docs/memoria-constante.md).
+- [Memoria compartida intermedia](docs/memoria-compartida.md).
+- [Variante final y comparación](docs/memoria-final.md).
+- [Estado de entrega](docs/PENDIENTES.md).
+
+Entregar código, mediciones, informe PDF, enlace al repositorio y presentación ejecutiva. Cada integrante registra sus avances en commits separados, conservando su autoría. Los compilados y el plan local están excluidos de Git.
