@@ -1,0 +1,2 @@
+variant,run,kernel_ms,gpu,cuda_runtime,cuda_driver,width,height,blocks,threads,warmup_runs,validated
+tres_memorias,1,1.217088,"Tesla T4",13000,13000,800,600,1875,256,1,true

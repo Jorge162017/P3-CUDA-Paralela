@@ -14,7 +14,7 @@ Las tres variantes están integradas en `main` y tienen validación contra CPU e
 
 La variante final redujo el tiempo un 18.19 % frente a la global con ese protocolo. La cifra depende del tramo medido; con los cien lanzamientos completos la reducción es aproximadamente 16 %. Ver [análisis y limitaciones](docs/memoria-final.md) y [bitácoras](results/fase6-tres-memorias/final/). No comparar directamente estos tiempos con los de sesiones anteriores.
 
-La versión global tiene [PNG y evidencia](results/fase2-global/). La versión final ahora exporta su propio acumulador y reutiliza el generador de PNG. **Falta ejecutar en Colab la nueva salida final y agregar su evidencia**, completar el informe PDF y preparar la presentación. Ver [pendientes](docs/PENDIENTES.md).
+La versión global tiene [PNG y evidencia](results/fase2-global/). La versión final ahora exporta su propio acumulador y reutiliza el generador de PNG. **Salida final validada en Colab:** [PNG, acumulador y logs](results/salida-final/). Coincidencia con CPU para la imagen original, imagen negra y bloques parciales de 21 y 300 píxeles. **Faltan el informe PDF y la presentación.** Ver [pendientes](docs/PENDIENTES.md).
 
 ## Estructura
 

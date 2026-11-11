@@ -10,13 +10,18 @@
 - Comparación final en la misma sesión: 60 mediciones reportadas por variante, seis rondas y validación CPU/GPU en cada lanzamiento. Promedios global 0.900314 ms, constante 0.861503 ms y final 0.736581 ms. CSV, logs, gráfica y recursos compilados en `results/fase6-tres-memorias/final/`.
 - Explicaciones, diagramas conceptuales y referencias en `memoria-constante.md`, `memoria-compartida.md` y `memoria-final.md`.
 
-## Salida final: implementada, falta evidencia GPU del ajuste
+## Salida final: completada y validada en GPU
 
-La versión final ahora exporta `tres-memorias-accumulator.json` después de validar el acumulador. La misma función de exportación se comparte con la versión global en `common/hough_output.h`. El dibujo usa `scripts/render_lines.py` y conserva la etiqueta de variante `tres_memorias`.
+La versión final exporta `tres-memorias-accumulator.json` después de validar el acumulador. La función se comparte con la versión global en `common/hough_output.h`. El dibujo conserva la etiqueta `tres_memorias`.
 
-Ejecutar `notebooks/salida_final_colab.ipynb`: comprueba original, imagen negra, bloques parciales de 21 y 300 píxeles y coincidencia con el acumulador global previamente guardado. Genera el PNG y descarga un ZIP con rutas `results/salida-final/`. Incorporar esos archivos al repositorio para cerrar la validación de la nueva salida. Esta ejecución no reemplaza ni mezcla las mediciones comparativas existentes.
+La ejecución real de `notebooks/salida_final_colab.ipynb` sobre el commit `048085ed7a76c71aad2434cc8472701449cf907a` pasó en Tesla T4 con CUDA Toolkit 13.0. Evidencia en `results/salida-final/`:
 
-Hasta recibir ese ZIP, no afirmar que la nueva exportación ya se ejecutó en GPU. Las comprobaciones locales cubren la serialización y el dibujo, además de la referencia CPU.
+- Original 800 × 600, imagen negra y bloques parciales de 21 y 300 píxeles coinciden con CPU.
+- Acumulador final idéntico al global previamente registrado: 12 456 540 votos.
+- PNG con doce líneas y umbral aproximado de 3541.55 votos, reproducido y comparado píxel por píxel con el exportado de Colab.
+- CSV de una ejecución para validar la salida, conservado aparte de las mediciones comparativas de fase 6. Su tiempo aislado no sustituye el promedio del experimento comparativo.
+
+Con esta evidencia se cierra el ajuste de salida. Quedan informe PDF, presentación y revisión de entrega.
 
 ## Informe final PDF
 

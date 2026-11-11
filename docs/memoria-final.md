@@ -119,7 +119,7 @@ Otra observación sin explicación causal: la variante final tuvo menos variaci�
 
 Con `--output directorio`, `build/hough_final` exporta tanto `tres-memorias-times.csv` como `tres-memorias-accumulator.json`, después de validar todos los lanzamientos. El acumulador incluye las tablas exactas y la etiqueta `tres_memorias`. La exportación ocurre fuera del intervalo CUDA Events y utiliza la misma función que la variante global.
 
-`notebooks/salida_final_colab.ipynb` ejecuta la versión final y genera su PNG a través de `scripts/render_lines.py`. Falta incorporar el ZIP real de esta nueva validación GPU; las mediciones comparativas de esta página se conservan y corresponden al commit anterior al ajuste de exportación. No se ha cambiado el kernel ni el protocolo medido.
+`notebooks/salida_final_colab.ipynb` ejecuta la versión final y genera su PNG a través de `scripts/render_lines.py`. La nueva salida fue validada en Tesla T4 sobre el commit `048085ed7a76c71aad2434cc8472701449cf907a`: original, imagen negra y bloques parciales de 21 y 300 píxeles coinciden con CPU. El acumulador original coincide con la referencia global y el PNG tiene doce líneas con umbral aproximado de 3541.55 votos. La evidencia está en [results/salida-final/](../results/salida-final/). Las mediciones comparativas de esta página se conservan y corresponden al commit anterior al ajuste de exportación; el CSV de una ejecución de la nueva salida solo documenta su validación. No se ha cambiado el kernel ni el protocolo medido.
 
 ## Cómo reproducirlo
 
