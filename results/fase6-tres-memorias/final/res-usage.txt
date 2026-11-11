@@ -1,0 +1,105 @@
+== global (./build/hough)
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function _Z13GPU_HoughTranPKhiiPiffPKfS3_:
+  REG:16 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:400 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_75
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =  --fmad false 
+
+== constante (./build/hough_const)
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0 CONSTANT[3]:720
+ Function _Z18GPU_HoughTranConstPKhiiPiff:
+  REG:16 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_75
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =  --fmad false 
+
+== tres_memorias (./build/hough_final)
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0
+
+Fatbin elf code:
+================
+arch = sm_75
+code version = [1,8]
+host = linux
+compile_size = 64bit
+
+Resource usage:
+ Common:
+  GLOBAL:0 CONSTANT[3]:720
+ Function _Z24GPU_HoughTranSharedConstPKhiiPiff:
+  REG:20 STACK:0 SHARED:36000 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+Fatbin ptx code:
+================
+arch = sm_75
+code version = [9,0]
+host = linux
+compile_size = 64bit
+compressed
+ptxasOptions =  --fmad false 
+

@@ -1,0 +1,11 @@
+variant,run,kernel_ms,gpu,cuda_runtime,cuda_driver,width,height,blocks,threads,warmup_runs,validated
+tres_memorias,91,0.742560,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,92,0.736672,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,93,0.737568,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,94,0.737056,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,95,0.738752,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,96,0.737888,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,97,0.737056,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,98,0.735552,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,99,0.738304,"Tesla T4",13000,13000,800,600,1875,256,1,true
+tres_memorias,100,0.737280,"Tesla T4",13000,13000,800,600,1875,256,1,true
