@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include "common/pgm.h"
+#include "common/hough_output.h"
 #ifndef HOUGH_CPU_ONLY
 #include <cuda_runtime.h>
 #endif
@@ -221,6 +222,10 @@ int main(int argc, char** argv) {
                     << ',' << std::quoted(properties.name) << ',' << runtime << ',' << driver
                     << ',' << w << ',' << h << ',' << blocks << ',' << threads << ",1,true\n";
             csv.close();
+            // Exporta solo después de validar todos los lanzamientos, fuera del tiempo.
+            exportHoughAccumulator(outputDirectory, image, gpu, rMax, rScale, cosines, sines,
+                                   true, "tres_memorias", "tres-memorias-accumulator.json",
+                                   degreeBins, rBins);
         }
         std::puts("VALIDACION OK: CPU y GPU coinciden en todos los bins.");
 #endif

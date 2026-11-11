@@ -65,6 +65,18 @@ class HoughOutputTests(unittest.TestCase):
                 self.assertEqual(image.getpixel((0, 0)), (25, 25, 25))
             self.assertTrue(json.loads((root / 'out.json').read_text())['gpu_executed'])
 
+    def test_final_variant_provenance_is_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            Image.new('L', (11, 11), 0).save(root / 'input.pgm')
+            data = accumulator()
+            data['variant'] = 'tres_memorias'
+            (root / 'acc.json').write_text(json.dumps(data))
+            details = render(root / 'input.pgm', root / 'acc.json', root / 'final.png')
+            self.assertEqual(details['variant'], 'tres_memorias')
+            self.assertTrue(details['gpu_executed'])
+            self.assertEqual(details['lines'], [])
+
     def test_reject_malformed_accumulator(self):
         data = accumulator()
         data['votes'] = []

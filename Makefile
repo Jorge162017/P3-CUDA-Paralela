@@ -8,7 +8,7 @@ TARGET := build/hough
 .PHONY: all clean
 all: $(TARGET) build/hough_const build/hough_shared build/hough_final
 
-$(TARGET): src/houghBase.cu common/pgm.h build/pgm.o | build
+$(TARGET): src/houghBase.cu common/pgm.h common/hough_output.h build/pgm.o | build
 	$(NVCC) $(CPPFLAGS) $(NVCCFLAGS) $< build/pgm.o -o $@
 
 build/hough_const: src/houghConst.cu common/pgm.h build/pgm.o | build
@@ -17,7 +17,7 @@ build/hough_const: src/houghConst.cu common/pgm.h build/pgm.o | build
 build/hough_shared: src/houghShared.cu common/pgm.h build/pgm.o | build
 	$(NVCC) $(CPPFLAGS) $(NVCCFLAGS) $< build/pgm.o -o $@
 
-build/hough_final: src/houghSharedConst.cu common/pgm.h build/pgm.o | build
+build/hough_final: src/houghSharedConst.cu common/pgm.h common/hough_output.h build/pgm.o | build
 	$(NVCC) $(CPPFLAGS) $(NVCCFLAGS) $< build/pgm.o -o $@
 
 build/pgm.o: common/pgm.cpp common/pgm.h | build
@@ -34,7 +34,7 @@ clean:
 cpu-check: build/hough_cpu
 	./build/hough_cpu data/runway.pgm
 
-build/hough_cpu: src/houghBase.cu common/pgm.cpp common/pgm.h | build
+build/hough_cpu: src/houghBase.cu common/pgm.cpp common/pgm.h common/hough_output.h | build
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -DHOUGH_CPU_ONLY -x c++ src/houghBase.cu common/pgm.cpp -o $@
 
 .PHONY: colab-package

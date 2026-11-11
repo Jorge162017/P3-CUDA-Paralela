@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include "common/pgm.h"
+#include "common/hough_output.h"
 #ifndef HOUGH_CPU_ONLY
 #include <cuda_runtime.h>
 #endif
@@ -43,35 +44,6 @@ std::vector<int> CPU_HoughTran(const PGMImage& image, float rMax,
     return acc;
 }
 
-// El acumulador exportado permite dibujar sin volver a ejecutar el kernel.
-// Se conservan las tablas exactas usadas durante la votación.
-void exportAccumulator(const std::string& directory, const PGMImage& image,
-                       const std::vector<int>& acc, float rMax, float rScale,
-                       const std::vector<float>& cosines, const std::vector<float>& sines,
-                       bool gpuExecuted) {
-    std::filesystem::create_directories(directory);
-    std::ofstream out(directory + "/global-accumulator.json");
-    out.exceptions(std::ios::failbit | std::ios::badbit);
-    out << std::setprecision(9)
-        << "{\n\"variant\": " << (gpuExecuted ? "\"global\"" : "\"cpu_reference\"")
-        << ",\n\"gpu_executed\": " << (gpuExecuted ? "true" : "false")
-        << ",\n\"width\": " << image.x_dim << ",\n\"height\": " << image.y_dim
-        << ",\n\"degree_bins\": " << degreeBins << ",\n\"r_bins\": " << rBins
-        << ",\n\"r_max\": " << rMax << ",\n\"r_scale\": " << rScale;
-    auto writeArray = [&](const char* name, const auto& values) {
-        out << ",\n" << std::quoted(name) << ": [";
-        for (std::size_t i = 0; i < values.size(); ++i) {
-            if (i) out << ',';
-            out << +values[i];
-        }
-        out << ']';
-    };
-    writeArray("cosines", cosines);
-    writeArray("sines", sines);
-    writeArray("votes", acc);
-    out << "\n}\n";
-    out.close();
-}
 
 #ifndef HOUGH_CPU_ONLY
 void checkCuda(cudaError_t status, const char* operation) {
@@ -179,7 +151,8 @@ int main(int argc, char** argv) {
         if (runs != 1) throw std::runtime_error("Las mediciones requieren compilar con CUDA");
         std::printf("CPU OK: %lld pixeles activos, %lld votos. GPU NO ejecutada.\n", active, votes);
         if (!outputDirectory.empty())
-            exportAccumulator(outputDirectory, image, cpu, rMax, rScale, cosines, sines, false);
+            exportHoughAccumulator(outputDirectory, image, cpu, rMax, rScale, cosines, sines,
+                                   false, "cpu_reference", "global-accumulator.json", degreeBins, rBins);
 #else
         if (!outputDirectory.empty()) std::filesystem::create_directories(outputDirectory);
         DeviceSession session;
@@ -243,7 +216,8 @@ int main(int argc, char** argv) {
                     << ',' << std::quoted(properties.name) << ',' << runtime << ',' << driver
                     << ',' << w << ',' << h << ',' << blocks << ',' << threads << ",1,true\n";
             csv.close();
-            exportAccumulator(outputDirectory, image, gpu, rMax, rScale, cosines, sines, true);
+            exportHoughAccumulator(outputDirectory, image, gpu, rMax, rScale, cosines, sines,
+                                   true, "global", "global-accumulator.json", degreeBins, rBins);
         }
         std::puts("VALIDACION OK: CPU y GPU coinciden en todos los bins.");
 #endif
